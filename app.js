@@ -4,7 +4,7 @@ const PORT = 3000;
 
 app.get("/api/test", (req, res) => {
   res.status(200).json({
-    message: "Duy oc cho",
+    message: "Duy oc cho!",
   });
 });
 
