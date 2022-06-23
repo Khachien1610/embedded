@@ -37,7 +37,7 @@ router.post("/auth", (req, res) => {
   Info.findOne({ id: req.body.id })
     .then((data) => {
       if (!data) {
-        return res.status(200).json({
+        return res.status(404).json({
           message: "Id doesn't exist!",
           data,
         });
@@ -48,7 +48,7 @@ router.post("/auth", (req, res) => {
           data,
         });
       }
-      return res.status(200).json({
+      return res.status(401).json({
         message: "Authentication failed!",
         data: null,
       });
