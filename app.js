@@ -1,9 +1,16 @@
 const express = require("express");
 const app = express();
 
-app.get("/api/test", (req, res) => {
-  res.status(200).json({
-    message: "Duy oc cho!",
+const db = require("./utils/db");
+db.connect();
+
+const userRoute = require("./routes/user");
+
+app.use("api/users/", userRoute);
+
+app.use((req, res, next) => {
+  res.status(404).send({
+    message: "Not Found",
   });
 });
 
