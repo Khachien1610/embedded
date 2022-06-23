@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const User = require("../models/user");
+const Info = require("../models/info");
 
 router.post("/", (req, res) => {
-  let user = new User({
+  let info = new Info({
     name: req.body.name,
     password: req.body.password,
   });
-  user
+  info
     .save()
     .then(() => {
       res.status(201).json({
@@ -20,7 +20,7 @@ router.post("/", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  User.find({})
+  Info.find({})
     .then((data) => {
       res.status(200).json({
         message: "Get list successfully",

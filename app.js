@@ -4,11 +4,11 @@ const app = express();
 const db = require("./utils/db");
 db.connect();
 
-const userRoute = require("./routes/user");
+const infoRoute = require("./routes/info");
 
 app.use(express.json());
 
-app.use("/api/users/", userRoute);
+app.use("/api/infos/", infoRoute);
 
 app.use((req, res, next) => {
   res.status(404).send({
