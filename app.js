@@ -6,6 +6,8 @@ db.connect();
 
 const userRoute = require("./routes/user");
 
+app.use(express.json());
+
 app.use("/api/users/", userRoute);
 
 app.use((req, res, next) => {
