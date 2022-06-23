@@ -5,8 +5,11 @@ const Info = require("../models/info");
 
 router.post("/", (req, res) => {
   let info = new Info({
-    name: req.body.name,
-    password: req.body.password,
+    id: req.body.id,
+    user: req.body.user,
+    keyword: req.body.keyword,
+    start: req.body.start,
+    close: req.body.close,
   });
   info
     .save()
