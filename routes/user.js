@@ -13,6 +13,18 @@ router.post("/", (req, res) => {
     .then(() => {
       res.status(201).json({
         message: "Create successfully!",
+        data: null,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.get("/", (req, res) => {
+  User.find({})
+    .then((data) => {
+      res.status(200).json({
+        message: "Get list successfully",
+        data,
       });
     })
     .catch((err) => console.log(err));
