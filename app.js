@@ -16,6 +16,6 @@ app.use((req, res, next) => {
   });
 });
 
-app.listen(3000 || process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(`App is listening!`);
 });
