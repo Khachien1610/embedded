@@ -26,8 +26,31 @@ router.get("/", (req, res) => {
   Info.find({})
     .then((data) => {
       res.status(200).json({
-        message: "Get list successfully",
+        message: "Get list successfully!",
         data,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.post("/auth", (req, res) => {
+  Info.findOne({ id: req.body.id })
+    .then((data) => {
+      if (!data) {
+        return res.status(200).json({
+          message: "Id doesn't exist!",
+          data,
+        });
+      }
+      if (data && data?.keyword === req.body.keyword) {
+        return res.status(200).json({
+          message: "Authentication successfully!",
+          data,
+        });
+      }
+      return res.status(200).json({
+        message: "Authentication failed!",
+        data: null,
       });
     })
     .catch((err) => console.log(err));
