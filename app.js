@@ -6,11 +6,13 @@ db.connect();
 
 const infoRoute = require("./routes/info");
 const userRoute = require("./routes/user");
+const servoRoute = require("./routes/servo");
 
 app.use(express.json());
 
 app.use("/api/infos/", infoRoute);
 app.use("/api/users/", userRoute);
+app.use("/api/servos/", servoRoute);
 
 app.use((req, res, next) => {
   res.status(404).send({
