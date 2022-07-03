@@ -34,6 +34,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/auth", (req, res) => {
+  console.log(req.body.id);
   Info.findOne({ id: req.body.id })
     .then((data) => {
       if (!data) {
