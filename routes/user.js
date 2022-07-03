@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const verifyToken = require("../middlewares/auth");
 
-router.post("/sign-up", verifyToken, async (req, res) => {
+router.post("/sign-up", async (req, res) => {
   let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
 
   let user = new User({
