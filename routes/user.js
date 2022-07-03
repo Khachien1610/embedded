@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const verifyToken = require("../middlewares/auth");
+const user = require("../models/user");
 
 router.post("/sign-up", async (req, res) => {
   let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
@@ -59,6 +60,21 @@ router.post("/login", async (req, res) => {
     userId: user._id,
     data: null,
   });
+});
+
+router.get("/:id", (req, res) => {
+  User.findById({ _id: req.params.id })
+    .then((data) => {
+      res.status(200).json({
+        message: "Get successfully!",
+        data: {
+          _id: data._id,
+          username: data.username,
+          email: data.email,
+        },
+      });
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
