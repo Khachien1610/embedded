@@ -44,12 +44,11 @@ client.on("message", async (topic, payload) => {
       });
       pi.save();
     }
-  } else {
-    console.log(data);
   }
 });
 
 router.post("/on", (req, res) => {
+  console.log(res.body);
   let data = {
     serial: req.body.id,
     room: req.body.room,
