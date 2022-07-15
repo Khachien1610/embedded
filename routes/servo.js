@@ -48,7 +48,7 @@ client.on("message", async (topic, payload) => {
 });
 
 router.post("/on", (req, res) => {
-  console.log(res.body);
+  console.log(req.body);
   let data = {
     serial: req.body.id,
     room: req.body.room,
