@@ -38,18 +38,11 @@ client.on("message", async (topic, payload) => {
     let pi = await Pi.findOne({ serial: data.serial });
     if (!pi) {
       let pi = new Pi({
-        id: data.serial,
+        serial: data.serial,
         rooms: data.rooms,
         floor: data.floor,
       });
-      pi.save()
-        .then(() => {
-          res.status(201).json({
-            message: "Create successfully!",
-            data: null,
-          });
-        })
-        .catch((err) => console.log(err));
+      pi.save();
     }
   } else {
     console.log(data);
