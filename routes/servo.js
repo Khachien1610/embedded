@@ -51,6 +51,8 @@ client.on("message", async (topic, payload) => {
         })
         .catch((err) => console.log(err));
     }
+  } else {
+    console.log(data);
   }
 });
 
