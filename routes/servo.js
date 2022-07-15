@@ -50,7 +50,7 @@ client.on("message", async (topic, payload) => {
 router.post("/on", (req, res) => {
   console.log(req.body);
   let data = {
-    serial: req.body.id,
+    serial: req.body.serial,
     room: req.body.room,
     active: true,
   };
@@ -72,7 +72,7 @@ router.post("/on", (req, res) => {
 
 router.post("/off", (req, res) => {
   let data = {
-    serial: req.body.id,
+    serial: req.body.serial,
     room: req.body.room,
     active: false,
   };
