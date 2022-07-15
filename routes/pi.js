@@ -13,4 +13,18 @@ router.get("/", (req, res) => {
     })
     .catch((err) => console.log(err));
 });
+
+router.post("/", (req, res) => {
+  let pi = new Pi({
+    id: req.body.id,
+  });
+  pi.save()
+    .then(() => {
+      res.status(201).json({
+        message: "Create successfully!",
+        data: null,
+      });
+    })
+    .catch((err) => console.log(err));
+});
 module.exports = router;

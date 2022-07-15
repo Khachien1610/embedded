@@ -3,6 +3,7 @@ const router = express.Router();
 
 const mqtt = require("mqtt");
 const { v4: uuidv4 } = require("uuid");
+const Pi = require("../models/pi");
 
 // Config
 const host = "broker.emqx.io";
@@ -30,28 +31,71 @@ client.on("connect", function () {
   });
 });
 
-router.get("/on", (req, res) => {
-  client.publish(topic, "servo on", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error(error);
+// Message
+client.on("message", async (topic, payload) => {
+  let data = JSON.parse(payload.toString());
+  if ("floor" in data) {
+    let pi = await Pi.findOne({ serial: data.serial });
+    if (!pi) {
+      let pi = new Pi({
+        id: data.serial,
+        rooms: data.rooms,
+        floor: data.floor,
+      });
+      pi.save()
+        .then(() => {
+          res.status(201).json({
+            message: "Create successfully!",
+            data: null,
+          });
+        })
+        .catch((err) => console.log(err));
     }
-    res.status(200).json({
-      message: "Serve is on",
-      data: null,
-    });
-  });
+  }
 });
 
-router.get("/off", (req, res) => {
-  client.publish(topic, "servo off", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error(error);
+router.post("/on", (req, res) => {
+  let data = {
+    serial: req.body.id,
+    room: req.body.room,
+    active: true,
+  };
+  client.publish(
+    topic,
+    JSON.stringify(data),
+    { qos: 0, retain: false },
+    (error) => {
+      if (error) {
+        console.error(error);
+      }
+      res.status(200).json({
+        message: "Serve is on",
+        data: null,
+      });
     }
-    res.status(200).json({
-      message: "Serve is off",
-      data: null,
-    });
-  });
+  );
+});
+
+router.post("/off", (req, res) => {
+  let data = {
+    serial: req.body.id,
+    room: req.body.room,
+    active: false,
+  };
+  client.publish(
+    topic,
+    JSON.stringify(data),
+    { qos: 0, retain: false },
+    (error) => {
+      if (error) {
+        console.error(error);
+      }
+      res.status(200).json({
+        message: "Serve is off",
+        data: null,
+      });
+    }
+  );
 });
 
 module.exports = router;
