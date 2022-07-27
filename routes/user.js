@@ -77,4 +77,36 @@ router.get("/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+router.post("/change-password", async (req, res) => {
+  const id = req.body.id;
+  let user = await User.findById(id);
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found!",
+      data: null,
+    });
+  }
+
+  let checkPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!checkPassword) {
+    return res.status(401).json({
+      message: "Old password incorrect!",
+      data: null,
+    });
+  }
+
+  bcrypt
+    .hash(req.body.passwordNew, saltRounds)
+    .then((hash) => {
+      return User.findOneAndUpdate({ _id: id }, { password: hash });
+    })
+    .then(() => {
+      res.status(200).json({
+        message: "Change password successfully!",
+        data: null,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
 module.exports = router;
