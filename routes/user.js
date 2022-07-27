@@ -6,8 +6,6 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-const verifyToken = require("../middlewares/auth");
-const user = require("../models/user");
 
 router.post("/sign-up", async (req, res) => {
   let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
@@ -16,6 +14,7 @@ router.post("/sign-up", async (req, res) => {
     username: req.body.username,
     password: passwordHash,
     email: req.body.email,
+    phone: req.body.phone,
   });
 
   user
@@ -71,6 +70,7 @@ router.get("/:id", (req, res) => {
           _id: data._id,
           username: data.username,
           email: data.email,
+          phone: data.phone,
         },
       });
     })
@@ -103,6 +103,20 @@ router.post("/change-password", async (req, res) => {
     .then(() => {
       res.status(200).json({
         message: "Change password successfully!",
+        data: null,
+      });
+    })
+    .catch((err) => console.log(err));
+});
+
+router.post("/change-information", async (req, res) => {
+  User.findOneAndUpdate(
+    { _id: req.body.id },
+    { email: req.body.email, phone: req.body.phone }
+  )
+    .then(() => {
+      res.status(200).json({
+        message: "Update information successfully!",
         data: null,
       });
     })
