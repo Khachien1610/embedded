@@ -9,7 +9,8 @@ const Pi = require("../models/pi");
 const host = "broker.emqx.io";
 const port = "1883";
 const clientId = `nodejs_${uuidv4()}`;
-const topic = "/mqtt/servo";
+const topicServo = "/mqtt/servo";
+const topicRegister = "mqtt/register";
 const username = "emqx";
 const password = "public";
 
@@ -26,36 +27,33 @@ const client = mqtt.connect(connectUrl, {
 
 client.on("connect", function () {
   console.log("MQTT connected");
-  client.subscribe([topic], () => {
-    console.log(`Subscribe to topic '${topic}'`);
+  client.subscribe([topicRegister], () => {
+    console.log(`Subscribe to topic '${topicRegister}'`);
   });
 });
 
 // Message
 client.on("message", async (topic, payload) => {
   let data = JSON.parse(payload.toString());
-  if ("floor" in data) {
-    let pi = await Pi.findOne({ serial: data.serial });
-    if (!pi) {
-      let pi = new Pi({
-        serial: data.serial,
-        rooms: data.rooms,
-        floor: data.floor,
-      });
-      pi.save();
-    }
+  let pi = await Pi.findOne({ serial: data.serial });
+  if (!pi) {
+    let pi = new Pi({
+      serial: data.serial,
+      rooms: data.rooms,
+      floor: data.floor,
+    });
+    pi.save();
   }
 });
 
 router.post("/on", (req, res) => {
-  console.log(req.body);
   let data = {
     serial: req.body.serial,
     room: req.body.room,
     active: true,
   };
   client.publish(
-    topic,
+    topicServo,
     JSON.stringify(data),
     { qos: 0, retain: false },
     (error) => {
@@ -77,7 +75,7 @@ router.post("/off", (req, res) => {
     active: false,
   };
   client.publish(
-    topic,
+    topicServo,
     JSON.stringify(data),
     { qos: 0, retain: false },
     (error) => {
